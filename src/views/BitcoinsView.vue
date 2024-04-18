@@ -1,5 +1,14 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <BitcoinTransactions />
 </template>
+
+<script>
+import BitcoinTransactions from '@/components/BitcoinTransactions.vue'
+export default {
+  components: {
+    BitcoinTransactions
+  }
+}
+</script>
+
+<style lang="scss"></style>
