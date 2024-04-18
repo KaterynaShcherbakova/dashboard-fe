@@ -6,3 +6,9 @@ export const defaultHeight = 100;
 
 export const websocketURL = 'wss://ws.blockchain.info/inv'
 export const bitcoinValue = 100000000;
+
+export const actionButtonNames = {
+    start: 'Start',
+    stop: 'Stop',
+    reset: 'Reset'
+};

@@ -1,8 +1,10 @@
 <template>
-    <button :class="'button-basic' + '' + buttonClass" @click="emitAction">{{ buttonText }}</button>
+    <button :class="'button-basic' + ' ' + buttonClass" @click="emitAction">{{ buttonText }}</button>
 </template>
 
 <script>
+import { actionButtonNames } from '@/utils/constants';
+
 export default {
     props: {
         actionType: {
@@ -12,12 +14,7 @@ export default {
     },
     computed: {
         buttonText() {
-            const actionNames = {
-                start: 'Start',
-                stop: 'Stop',
-                reset: 'Reset'
-            };
-            return actionNames[this.actionType] || 'Action';
+            return actionButtonNames[this.actionType] || 'Action';
         },
         buttonClass() {
             return `button-${this.actionType}`;

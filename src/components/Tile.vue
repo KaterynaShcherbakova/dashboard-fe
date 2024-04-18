@@ -2,7 +2,7 @@
     <div class="tile" :style="getTileStyle()" draggable="true" @dragstart="handleDragStart($event)" @dragover.prevent
         @dragend="handleDragEnd()">
         <header class="tile-header">
-            <h4 class="tile-title">Tile {{ data.id }}</h4>
+            <h4 class="tile-title">{{ getTileTitle() }}</h4>
             <button class="tile-button" @click="$emit('delete')">delete</button>
         </header>
         <div class="tile-resize-handle" @mousedown="initResize($event)"></div>
@@ -41,6 +41,9 @@ export default {
         },
         valueStickedToGrid(value) {
             return Math.round(value / tileIncrement) * tileIncrement;
+        },
+        getTileTitle() {
+            return `Tile ${this.data.id}`
         },
         handleDragStart(event) {
             if (this.isResizing) {
@@ -103,8 +106,8 @@ export default {
             background-color: #294d87;
             color: white;
             outline: none;
-            border:none;
-            cursor:pointer;
+            border: none;
+            cursor: pointer;
             border-radius: 4px;
         }
     }

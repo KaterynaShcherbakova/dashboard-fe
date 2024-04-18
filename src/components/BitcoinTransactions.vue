@@ -2,9 +2,9 @@
     <h1>Transactions</h1>
 
     <div class="toolbar">
-        <ActionButton class="button-start" actionType="start" @action="startSubscription" />
-        <ActionButton class="button-stop" actionType="stop" @action="stopSubscription" />
-        <ActionButton class="button-reset" actionType="reset" @action="resetTransactions" />
+        <ActionButton actionType="start" @action="startSubscription" />
+        <ActionButton actionType="stop" @action="stopSubscription" />
+        <ActionButton actionType="reset" @action="resetTransactions" />
     </div>
 
     <h3>Sum: {{ totalValue.toFixed(8) }} BTC</h3>
@@ -72,15 +72,7 @@ export default {
 
 
 <style lang="scss">
-.button-basic {
-    outline: none;
-    border: 1px solid transparent;
-    padding: 12px 36px;
-    border-radius: 8px;
-    color: white;
-    transition: all 0.3s;
-    cursor: pointer;
-}
+
 
 .toolbar {
     display: flex;
@@ -89,40 +81,5 @@ export default {
     gap: 40px;
     margin-bottom: 20px;
 
-
-    .button-start {
-        @extend .button-basic;
-        background-color: green;
-
-        &:hover {
-            color: green;
-            border: 1px solid green;
-            background-color: white
-        }
-    }
-
-    .button-stop {
-        @extend .button-basic;
-        background-color: red;
-
-
-        &:hover {
-            color: red;
-            border: 1px solid red;
-            background-color: white
-        }
-    }
-
-    .button-reset {
-        @extend .button-basic;
-        background-color: orange;
-
-
-        &:hover {
-            color: orange;
-            border: 1px solid orange;
-            background-color: white
-        }
-    }
 }
 </style>
