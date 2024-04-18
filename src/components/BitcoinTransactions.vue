@@ -2,36 +2,21 @@
     <h1>Transactions</h1>
 
     <div class="toolbar">
-        <button class="button-start" @click="startSubscription()">Start</button>
-        <button class="button-stop" @click="stopSubscription()">Stop</button>
-        <button class="button-reset" @click="resetTransactions()">Reset</button>
+        <ActionButton class="button-start" actionType="start" @action="startSubscription" />
+        <ActionButton class="button-stop" actionType="stop" @action="stopSubscription" />
+        <ActionButton class="button-reset" actionType="reset" @action="resetTransactions" />
     </div>
 
     <h3>Sum: {{ totalValue.toFixed(8) }} BTC</h3>
 
-
-    <table class="transactions-table">
-        <thead>
-            <tr>
-                <th>From</th>
-                <th>To</th>
-                <th>Sum</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="transaction in transactions" :key="transaction.hash">
-                <td>{{ getFromAddr(transaction.x) }}</td>
-                <td>{{ getToAddr(transaction.x) }}</td>
-                <td>{{ getValue(transaction.x) }} BTC</td>
-            </tr>
-        </tbody>
-    </table>
-
+    <TransactionsTable :transactions="transactions" />
 
 </template>
 
 <script>
 import { bitcoinValue, websocketURL } from '@/utils/constants';
+import TransactionsTable from '@/components/TransactionsTable.vue';
+import ActionButton from '@/components/ActionButton.vue'
 export default {
     data() {
         return {
@@ -40,21 +25,13 @@ export default {
             ws: null,
         };
     },
+    components: {
+        ActionButton,
+        TransactionsTable
+    },
     methods: {
         getTotalValue(outputs) {
             return outputs.reduce((sum, output) => sum + output.value, 0) / bitcoinValue;
-        },
-        getValue(x) {
-            return x.out.map((input) => input.value).reduce((sum, output) => sum + output, 0) / bitcoinValue;
-        },
-
-        getFromAddr(x) {
-            return x.out.map((input) => input.addr).reduce((addresses, address) => addresses + '\n' + address)
-
-        },
-        getToAddr(x) {
-            return x.inputs.map((input) => input.prev_out.addr).reduce((addresses, address) => addresses + '\n' + address)
-
         },
         startSubscription() {
             this.ws = new WebSocket(websocketURL);
@@ -69,16 +46,12 @@ export default {
                     this.transactions.push(data);
                     this.totalValue += this.getTotalValue(data.x.out);
                 }
-                console.log(data)
             };
 
             this.ws.onerror = (error) => {
-                console.error('WebSocket Error: ', error);
+                console.error('WebSocket error: ', error);
             };
 
-            this.ws.onclose = () => {
-                console.log('WebSocket connection closed');
-            };
         },
         stopSubscription() {
             if (this.ws) {
@@ -150,21 +123,6 @@ export default {
             border: 1px solid orange;
             background-color: white
         }
-    }
-}
-
-.transactions-table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th {
-        text-align: center;
-    }
-
-    th,
-    td {
-        border: 1px solid #ddd;
-        padding: 8px;
     }
 }
 </style>

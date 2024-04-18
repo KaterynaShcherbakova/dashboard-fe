@@ -1,19 +1,19 @@
 <template>
     <h1>Trading desk</h1>
-    <div class="trading-desk" ref="tradingDesk" @dragover.prevent @drop="handleDrop($event)">
-        <template v-for="tileData in tiles" :key="tileData.id">
-            <template v-if="tileData.deleted">
-                <div class="return-tile-box" :style="getReturnTileBoxStyle(tileData)"
-                    @click="returnTileById(tileData.id)">
-                    Return tile {{ tileData.id }} to
-                    trading desk</div>
+    <div class="trading-desk-wrapper" ref="tradingDeskWrapper">
+        <div class="trading-desk" ref="tradingDesk" @dragover.prevent @drop="handleDrop($event)">
+            <template v-for="tileData in tiles" :key="tileData.id">
+                <template v-if="tileData.deleted">
+                    <div class="return-tile-box" :style="getReturnTileBoxStyle(tileData)"
+                        @click="returnTileById(tileData.id)">{{ getReturnTileBoxText(tileData) }}</div>
+                </template>
+                <template v-else>
+                    <Tile :data="tileData" @drag-start="bringToFront(tileData); handleDragStart(tileData, $event)"
+                        @drag-end="handleDragEnd(tileData)" @click="bringToFront(tileData)"
+                        @delete="deleteTileById(tileData.id)" />
+                </template>
             </template>
-            <template v-else>
-                <Tile :data="tileData" @drag-start="bringToFront(tileData); handleDragStart(tileData, $event)"
-                    @drag-end="handleDragEnd(tileData)" @click="bringToFront(tileData)"
-                    @delete="deleteTileById(tileData.id)" />
-            </template>
-        </template>
+        </div>
     </div>
 </template>
 
@@ -67,6 +67,10 @@ export default {
                 this.addNewItem(320, 120),
             ];
         },
+
+        getReturnTileBoxText(tileData) {
+            return `Return tile ${ tileData.id } to trading desk`
+        },
         getTradingDeskWidth() {
             const tradingDesk = this.$refs.tradingDesk;
             return tradingDesk ? tradingDesk.offsetWidth : 600;
@@ -110,16 +114,18 @@ export default {
 
         handleDrop(event) {
             if (this.currentTile) {
-                const x = event.clientX - this.dragOffsetX;
-                const y = event.clientY - this.dragOffsetY;
+                const tradingDesk = this.$refs.tradingDeskWrapper;
+                const x = event.clientX + tradingDesk.scrollLeft - this.dragOffsetX;
+                const y = event.clientY + tradingDesk.scrollTop - this.dragOffsetY;
                 this.currentTile.x = this.valueStickedToGrid(x);
                 this.currentTile.y = this.valueStickedToGrid(y);
                 this.saveTiles();
             }
         },
         handleDragStart(tile, event) {
-            this.dragOffsetX = event.clientX - tile.x;
-            this.dragOffsetY = event.clientY - tile.y;
+            const tradingDesk = this.$refs.tradingDeskWrapper;
+            this.dragOffsetX = event.clientX + tradingDesk.scrollLeft - tile.x;
+            this.dragOffsetY = event.clientY + tradingDesk.scrollTop - tile.y;
             this.currentTile = tile;
         },
         handleDragEnd() {
@@ -143,22 +149,27 @@ export default {
 </script>
 
 <style lang="scss">
-.trading-desk {
-    position: relative;
-    width: 100%;
-    height: 600px;
+.trading-desk-wrapper {
+    max-width: 100vw;
+    overflow-x: auto;
     border: 1px solid #ccc;
 
-    .return-tile-box {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 50px;
-        width: 300px;
-        cursor: pointer;
-        background-color: lightgrey;
-        color: black;
+    .trading-desk {
+        position: relative;
+        width: 3000px;
+        height: 600px;
+
+        .return-tile-box {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            width: 300px;
+            cursor: pointer;
+            background-color: lightgrey;
+            color: black;
+        }
     }
 }
 </style>
