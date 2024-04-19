@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import TilesView from '../views/TilesView.vue'
+
 
 const routes = [
   {
     path: '/',
     name: 'tiles',
-    component: TilesView
+    component: () => import('../views/TilesView.vue')
   },
   {
     path: '/bitcoins',
