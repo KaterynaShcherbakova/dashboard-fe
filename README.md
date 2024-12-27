@@ -65,6 +65,6 @@ yarn build
 bun run build
 ```
 
-# Docs Links
+## Docs Links
 - **Vue 3**: `https://vuejs.org/`
 
